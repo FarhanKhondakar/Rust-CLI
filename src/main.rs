@@ -1,7 +1,7 @@
 // Bringing the ENV Module. 
 use std::env; 
 use std::fs;
-use std::string;
+use std::process;
 
 
 // Main
@@ -10,8 +10,13 @@ fn main() {
     // Simple Command Line Arguments 
     let args: Vec<String> = env::args().collect();     
 
-    // Deconstructing the Tuple -> Query & Filename
-    let config = parse_configs(&args);
+    // Getting The Args from Config Implementation 
+    // If OK, then unpackages/deconstructs
+    // Else, it exits/quits the program
+    let config = Config::new(&args).unwrap_or_else(|err| { 
+        println!("Problem Parsing Arguments: {}", err); 
+        process::exit(1);
+    });
 
     
     // Printing to Console.
@@ -29,18 +34,28 @@ fn main() {
 }
 
 
+
 struct Config { 
     query: String, 
     filename: String, 
 }
 
-fn parse_configs(args: &[String]) -> Config { 
+impl Config { 
+    // Function is a "new" Config, based on Implementation of Config
+    fn new(args: &[String]) -> Result<Config,&str> { 
+        // Safety Check 
 
-    // Query & Filename Arguments 
-    let query = args[1].clone();
-    let filename= args[2].clone(); 
+        if args.len() < 3 {
+           return Err("not enough arguments");
+        }
 
-    // Return Tuple
-    Config { query, filename }
 
+        // Query & Filename Arguments 
+        let query = args[1].clone();
+        let filename= args[2].clone(); 
+    
+        // Return Tuple
+        Ok(Config { query, filename })
+    
+    }
 }
