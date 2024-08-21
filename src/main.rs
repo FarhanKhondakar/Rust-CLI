@@ -1,6 +1,7 @@
 // Bringing the ENV Module. 
 use std::env; 
 use std::fs;
+use std::string;
 
 
 // Main
@@ -10,16 +11,16 @@ fn main() {
     let args: Vec<String> = env::args().collect();     
 
     // Deconstructing the Tuple -> Query & Filename
-    let (query, filename) = parse_configs(&args);
+    let config = parse_configs(&args);
 
     
     // Printing to Console.
-    println!("Searching For {}", query);
-    println!("In File {}", filename);
+    println!("Searching For {}", config.query);
+    println!("In File {}", config.filename);
 
     // Reads Contents 
     // Else, returns Exception 
-    let contents = fs::read_to_string(filename).expect("Something went wrong!");
+    let contents = fs::read_to_string(config.filename).expect("Something went wrong!");
 
 
     println!("With text \n{}", contents);
@@ -27,13 +28,19 @@ fn main() {
 
 }
 
-fn parse_configs(args: &[String]) -> (&str, &str) { 
+
+struct Config { 
+    query: String, 
+    filename: String, 
+}
+
+fn parse_configs(args: &[String]) -> Config { 
 
     // Query & Filename Arguments 
-    let query = &args[1];
-    let filename= &args[2]; 
+    let query = args[1].clone();
+    let filename= args[2].clone(); 
 
     // Return Tuple
-    (query, filename)
+    Config { query, filename }
 
 }
