@@ -9,12 +9,8 @@ fn main() {
     // Simple Command Line Arguments 
     let args: Vec<String> = env::args().collect();     
 
-
-    // First Two Arguments 
-    // Query is the String We Want 
-    // Filename, is the File We Want To Search 
-    let query = &args[1];
-    let filename= &args[2]; 
+    // Deconstructing the Tuple -> Query & Filename
+    let (query, filename) = parse_configs(&args);
 
     
     // Printing to Console.
@@ -28,5 +24,16 @@ fn main() {
 
     println!("With text \n{}", contents);
 
+
+}
+
+fn parse_configs(args: &[String]) -> (&str, &str) { 
+
+    // Query & Filename Arguments 
+    let query = &args[1];
+    let filename= &args[2]; 
+
+    // Return Tuple
+    (query, filename)
 
 }
