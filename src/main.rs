@@ -2,6 +2,7 @@
 use std::env; 
 use std::fs;
 use std::process;
+use std::error::Error;
 
 
 // Main
@@ -23,16 +24,23 @@ fn main() {
     println!("Searching For {}", config.query);
     println!("In File {}", config.filename);
 
-    // Reads Contents 
-    // Else, returns Exception 
-    let contents = fs::read_to_string(config.filename).expect("Something went wrong!");
 
-
-    println!("With text \n{}", contents);
-
+    if let Err(e) = run(config) { 
+        println!("Application Error: {}", e); 
+        process::exit(1);
+    }
 
 }
 
+
+fn run (config: Config) ->  Result<(), Box<dyn Error>> { 
+    // Reads Contents 
+    // Else, returns Exception 
+    let contents = fs::read_to_string(config.filename)?;
+    println!("With text \n{}", contents);
+
+    Ok(())
+}
 
 
 struct Config { 
